@@ -1,0 +1,30 @@
+[
+  {
+    "id": "",
+    "authorId": 0,
+    "date": "",
+    "href": "",
+    "listingCategoryId": 0,
+    "title": "",
+    "featuredImage": "",
+    "galleryImgs": [],
+    "commentCount": 0,
+    "viewCount": 0,
+    "like": false,
+    "address": "",
+    "city": "",
+    "state": "",
+    "reviewStart": 0,
+    "reviewCount": 0,
+    "price": 0,
+    "maxGuests": 0,
+    "bedrooms": 0,
+    "bathrooms": 0,
+    "description": [],
+    "saleOff": null,
+    "isAds": null,
+    "sqft": 0,
+    "available": true,
+    "map": { "lat": 0, "lng": 0 }
+  }
+]
