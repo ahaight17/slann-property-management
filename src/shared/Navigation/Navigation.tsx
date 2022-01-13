@@ -1,6 +1,7 @@
 import React from "react";
 import NavigationItem from "./NavigationItem";
 import { NAVIGATION_DEMO } from "data/navigation";
+import LoginButton from './LoginButton';
 
 function Navigation() {
   return (
@@ -8,6 +9,7 @@ function Navigation() {
       {NAVIGATION_DEMO.map((item) => (
         <NavigationItem key={item.id} menuItem={item} />
       ))}
+      <LoginButton />
     </ul>
   );
 }
