@@ -1,5 +1,5 @@
 import StayCard from "components/StayCard/StayCard";
-import  { FC, useState } from "react";
+import  { FC, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useAllProperties } from "net/properties";
 
@@ -8,6 +8,19 @@ export interface AuthorPageProps {
 }
 
 const AllListings: FC<AuthorPageProps> = ({ className = "" }) => {
+  
+  useEffect(() => {
+    const $body = document.querySelector("body");
+    if ($body) {
+      $body.className = "theme-base";
+    }
+    return () => {
+      if ($body) {
+        $body.className = "";
+      }
+    };
+  }, [])
+  
   const properties = useAllProperties();
 
   const renderSection1 = () => {

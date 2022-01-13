@@ -3,27 +3,13 @@ import { Page } from "./types";
 import ScrollToTop from "./ScrollToTop";
 import Footer from "shared/Footer/Footer";
 import Page404 from "containers/Page404/Page404";
-import ListingStayDetailPage from "containers/ListingDetailPage/ListingStayDetailPage";
-import MaintenanceRequest from "containers/MaintenanceRequest/MaintenanceRequest";
-import PageAbout from "containers/AboutUs/AboutUs";
-import ListingRealEstateMapPage from "containers/ListingRealEstatePage/ListingRealEstateMapPage";
 import SiteHeader from "containers/SiteHeader";
-import WaitingList from "containers/WaitingList/WaitingList";
-import WhyUs from "containers/WhyUs/WhyUs";
-import Advantages from "containers/Advantages/Advantages";
-import FAQ from "containers/FAQ/FAQ";
-import AccountPage from "containers/AccountPage/AccountPage";
 import AllListings from "containers/AllListings/AllListings";
+import PageAddListing from "containers/PageAddListing/PageAddListing2";
 
 export const pages: Page[] = [
   { path: "/", exact: true, component: AllListings },
-  { path: "/maintenance", component: MaintenanceRequest },
-  { path: "/waiting-list", component: WaitingList },
-  { path: "/about", component: PageAbout },
-  { path: "/why-us", component: WhyUs },
-  { path: "/advantages", component: Advantages },
-  { path: "/faq", component: FAQ },
-  { path: "/listing-detail/:address", component: ListingStayDetailPage },
+  { path: "/add-listing", component: PageAddListing }
 ];
 
 const Routes = () => {
