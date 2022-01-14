@@ -6,10 +6,12 @@ import Page404 from "containers/Page404/Page404";
 import SiteHeader from "containers/SiteHeader";
 import AllListings from "containers/AllListings/AllListings";
 import PageAddListing from "containers/PageAddListing/PageAddListing2";
+import ListingStayDetailPage from "containers/ListingDetailPage/ListingStayDetailPage";
 
 export const pages: Page[] = [
   { path: "/", exact: true, component: AllListings },
-  { path: "/add-listing", component: PageAddListing }
+  { path: "/add-listing", component: PageAddListing },
+  { path: "/listing-detail/:address", component: ListingStayDetailPage },
 ];
 
 const Routes = () => {

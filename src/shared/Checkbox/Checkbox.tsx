@@ -7,6 +7,7 @@ export interface CheckboxProps {
   name: string;
   defaultChecked?: boolean;
   onChange?: (checked: boolean) => void;
+  disabled?: boolean;
 }
 
 const Checkbox: FC<CheckboxProps> = ({
@@ -16,6 +17,7 @@ const Checkbox: FC<CheckboxProps> = ({
   className = "",
   defaultChecked,
   onChange,
+  disabled = false
 }) => {
   return (
     <div className={`flex text-sm sm:text-base ${className}`}>
@@ -23,16 +25,17 @@ const Checkbox: FC<CheckboxProps> = ({
         id={name}
         name={name}
         type="checkbox"
-        className="focus:ring-action-primary h-6 w-6 text-primary-500 border-primary rounded border-neutral-500 bg-white dark:bg-neutral-700  dark:checked:bg-primary-500 focus:ring-primary-500"
+        className="focus:ring-action-primary h-6 w-6 text-primary-700 border-primary rounded border-neutral-500 bg-white dark:bg-neutral-700 dark:checked:bg-primary-500 focus:ring-primary-500"
         defaultChecked={defaultChecked}
         onChange={(e) => onChange && onChange(e.target.checked)}
+        disabled={disabled}
       />
       {label && (
         <label
           htmlFor={name}
           className="ml-3.5 flex flex-col flex-1 justify-center"
         >
-          <span className=" text-neutral-900 dark:text-neutral-100">
+          <span className={`${disabled ? 'text-neutral-300 dark:text-neutral-700' : 'text-neutral-900 dark:text-neutral-100'}`}>
             {label}
           </span>
           {subLabel && (
@@ -41,6 +44,7 @@ const Checkbox: FC<CheckboxProps> = ({
             </p>
           )}
         </label>
+        
       )}
     </div>
   );

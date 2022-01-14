@@ -3,6 +3,7 @@ import { ComponentType } from "react";
 export interface LocationStates {
   "/"?: {};
   "/add-listing"?: {};
+  "/listing-detail/:address"?: {};
 }
 
 export type PathName = keyof LocationStates;
