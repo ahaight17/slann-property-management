@@ -2,6 +2,7 @@ import LocationMarker from "components/AnyReactComponent/LocationMarker";
 import Label from "components/Label/Label";
 import GoogleMapReact from "google-map-react";
 import React, { FC, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
 import Checkbox from "shared/Checkbox/Checkbox";
 import Input from "shared/Input/Input";
@@ -9,9 +10,10 @@ import Select from "shared/Select/Select";
 import Textarea from "shared/Textarea/Textarea";
 import FormItem from "./FormItem";
 
-export interface PageAddListing2Props {}
+export interface PageAddListingProps {}
 
-const PageAddListing2: FC<PageAddListing2Props> = () => {
+const PageAddListing: FC<PageAddListingProps> = () => {
+  const params:any = useParams()
   const [address, setAddress]:any = useState(undefined)
   const [city, setCity]:any = useState(undefined)
   const [state, setState]:any = useState(undefined)
@@ -54,8 +56,10 @@ const PageAddListing2: FC<PageAddListing2Props> = () => {
       headers: {
         'Content-Type': 'application/json'
       }
-    }).then(() => {
-      window.location.assign(window.location.origin)
+    }).then((res) => {
+      return res.json()
+    }).then((data) => {
+      window.location.assign(`${window.location.origin}/edit-photos/${data.insertedId}`)
     }).catch((e) => {
       console.error(e)
     })
@@ -69,7 +73,6 @@ const PageAddListing2: FC<PageAddListing2Props> = () => {
       fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${params}&key=${process.env.REACT_APP_GCP_API_KEY}`).then((res) => {
         return res.json()
       }).then((data) => {
-        console.log(data);
         setFullLocation(data.results[0].formatted_address)
         setMap(data.results[0].geometry.location)
       }).catch((e) => {
@@ -95,21 +98,6 @@ const PageAddListing2: FC<PageAddListing2Props> = () => {
       }
     };
   }, [])
-  
-  const renderMapWithMarker = () => {
-    return (
-      <GoogleMapReact
-        bootstrapURLKeys={{
-          key: `${process.env.REACT_APP_GCP_API_KEY}`,
-        }}
-        defaultZoom={15}
-        yesIWantToUseGoogleMapApiInternals
-        defaultCenter={map}
-      >
-        <LocationMarker lat={map.lat} lng={map.lng} />
-      </GoogleMapReact>
-    )
-  }
 
   return (
     <div
@@ -167,8 +155,8 @@ const PageAddListing2: FC<PageAddListing2Props> = () => {
             </FormItem>
             <FormItem label="Property Availability">
               <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                <Checkbox label="Available" name="Available" onChange={(e) => setSelected((old:any) => [e, old[1]])} disabled={selected[1]}/>
-                <Checkbox label="Unavailable" name="Unavailable" onChange={(e) => setSelected((old:any) => [old[0], e])} disabled={selected[0]}/>
+                <Checkbox label="Available" name="Available" onChange={(e) => setSelected((old:any) => [e, old[1]])} disabled={selected[1]} checked={selected[0]}/>
+                <Checkbox label="Unavailable" name="Unavailable" onChange={(e) => setSelected((old:any) => [old[0], e])} disabled={selected[0]} checked={selected[1]}/>
               </div>
             </FormItem>
             { selected[1] && 
@@ -223,4 +211,4 @@ const PageAddListing2: FC<PageAddListing2Props> = () => {
   );
 };
 
-export default PageAddListing2;
+export default PageAddListing;

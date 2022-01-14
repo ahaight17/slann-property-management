@@ -5,6 +5,7 @@ import NcImage from "shared/NcImage/NcImage";
 import ModalPhotos from "./ModalPhotos";
 import { useParams } from "react-router-dom";
 import { useSingleProperty } from "net/properties";
+import ButtonSecondary from "shared/Button/ButtonSecondary";
 
 export interface ListingStayDetailPageProps {
   className?: string;
@@ -18,13 +19,13 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
   const params:any = useParams()
   let PHOTOS: string[] = ['./']
 
-  const property = useSingleProperty(params.address)
+  const property = useSingleProperty(params.id)
   console.log(property)
 
   if(property.data && Object.entries(property.data).length === 0) window.location.assign(window.location.origin)
 
   if(property.data){
-    PHOTOS = property.data.galleryImgs.concat([property.data.featuredImage])
+    PHOTOS = property.data.photos
   }
 
   const [isOpen, setIsOpen] = useState(false);
@@ -49,6 +50,10 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
     };
   }, []);
 
+  const handleEditClick = () => {
+    window.location.assign(`${window.location.origin}/edit-listing/${params.id}`);
+  }
+
   const renderSection1 = () => {
     return (
       <div className="listingSection__wrap !space-y-6">
@@ -69,6 +74,16 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
           <span className="flex items-start justify-start px-3 py-2 border border-primary-50 rounded leading-none text-base font-medium text-primary-50">
             { property.data ? `$${property.data.price}/mo` : '---/mo'}
           </span>
+          { property.data && 
+            <div className="flex items-center justify-center gap-x-4">
+              <span className={`flex items-center justify-center px-3 py-2 border rounded leading-none text-base font-medium ${property.data.available !== true ? 'border-neutral-500 text-neutral-500' : 'border-secondary-500 text-secondary-500'}`}>
+                { property.data.available === true ? 'AVAILABLE' : 'UNAVAILABLE' }
+              </span>
+              <span className="text-sm text-neutral-900 dark:text-neutral-400 pt-2">
+                { property.data.available !== true && property.data.available}
+              </span>
+            </div>
+          }
         </div>
 
         {/* 5 */}
@@ -104,10 +119,14 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
       <div className="listingSection__wrap">
         <h2 className="text-2xl font-semibold">Stay information</h2>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-        <div className="text-neutral-6000 dark:text-neutral-300">
-          <span>
-            { property.data ? property.data.description : '--' }
-          </span>
+        <div className="text-neutral-6000 dark:text-neutral-300 grid gap-y-2">
+          { property.data && 
+            property.data.description.split('\n').map((descLine:any) => (
+              <span>
+                {descLine}
+              </span>
+            ))
+          }
         </div>
       </div>
     );
@@ -153,6 +172,9 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
     >
       <main className="container mt-11 flex justify-center">
         <div className="w-full lg:w-3/5 xl:w-2/3 space-y-8 lg:space-y-10 lg:pr-10 mb-4">
+          <div className="flex justify-end space-x-5">
+            <ButtonSecondary onClick={handleEditClick}>EDIT LISTING</ButtonSecondary>
+          </div>
           {renderSection1()}
           {renderSection2()}
           {renderSection7()}

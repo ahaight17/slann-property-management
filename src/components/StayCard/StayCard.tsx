@@ -3,6 +3,7 @@ import GallerySlider from "components/GallerySlider/GallerySlider";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
 import { Link } from "react-router-dom";
 import Button from "shared/Button/Button";
+import { usePropertyPhotos } from "net/photos";
 
 export interface StayCardProps {
   className?: string;
@@ -24,6 +25,7 @@ const StayCard: FC<StayCardProps> = ({
   setName,
   setId,
 }) => {
+  const photos = usePropertyPhotos(data._id)
 
   const handleDeleteClick = (e:any) => {
     e.preventDefault()
@@ -38,7 +40,7 @@ const StayCard: FC<StayCardProps> = ({
         <GallerySlider
           uniqueID={`stay-v-${data._id}`}
           ratioClass={ratioClass}
-          galleryImgs={data.galleryImgs}
+          galleryImgs={photos.data || []}
         />
       </div>
     );
@@ -108,7 +110,7 @@ const StayCard: FC<StayCardProps> = ({
     <div
       className={`nc-StayCard group relative bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 rounded-2xl overflow-hidden hover:shadow-xl transition-shadow ${className}`}
       data-nc-id="StayCard" >
-      <Link to={`/listing-detail/${data.address.replace(/[ ]/g, '-')}`}>
+      <Link to={`/listing-detail/${data._id}`}>
         {renderSliderGallery()}
         {renderContent()}
       </Link>

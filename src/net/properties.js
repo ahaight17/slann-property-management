@@ -11,8 +11,8 @@ export function useAllProperties(){
   }
 }
 
-export function useSingleProperty(address){
-  const { data, err } = useSWR(`/property/address/${address}`, fetcher)
+export function useSingleProperty(id){
+  const { data, err } = useSWR(`/property/address/${id}`, fetcher)
 
   return {
     data: data,
