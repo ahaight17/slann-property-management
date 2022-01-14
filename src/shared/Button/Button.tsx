@@ -14,7 +14,7 @@ export interface ButtonProps {
   type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
   href?: keyof LocationStates | "#" | LinkProps["to"];
   targetBlank?: boolean;
-  onClick?: () => void;
+  onClick?: (e:any) => void;
 }
 
 const Button: FC<ButtonProps> = ({

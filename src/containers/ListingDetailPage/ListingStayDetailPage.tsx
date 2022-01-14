@@ -19,6 +19,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
   let PHOTOS: string[] = ['./']
 
   const property = useSingleProperty(params.address)
+  console.log(property)
 
   if(property.data && Object.entries(property.data).length === 0) window.location.assign(window.location.origin)
 
@@ -150,77 +151,6 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
       className={`nc-ListingStayDetailPage  ${className}`}
       data-nc-id="ListingStayDetailPage"
     >
-      {/* SINGLE HEADER */}
-      <>
-        <header className="container 2xl:px-14 rounded-md sm:rounded-xl">
-          <div className="relative grid grid-cols-3 sm:grid-cols-4 gap-1 sm:gap-2">
-            <div
-              className="col-span-2 row-span-3 sm:row-span-2 relative rounded-md sm:rounded-xl overflow-hidden cursor-pointer"
-              onClick={() => handleOpenModal(0)}
-            >
-              <NcImage
-                containerClassName="absolute inset-0"
-                className="object-cover w-full h-full rounded-md sm:rounded-xl"
-                src={PHOTOS[0]}
-                prevImageHorizontal
-              />
-              <div className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity"></div>
-            </div>
-            {PHOTOS.filter((_, i) => i >= 1 && i < 5).map((item, index) => (
-              <div
-                key={index}
-                className={`relative rounded-md sm:rounded-xl overflow-hidden ${
-                  index >= 3 ? "hidden sm:block" : ""
-                }`}
-              >
-                <NcImage
-                  containerClassName="aspect-w-4 aspect-h-3 sm:aspect-w-6 sm:aspect-h-5"
-                  className="object-cover w-full h-full rounded-md sm:rounded-xl "
-                  src={item || ""}
-                  prevImageHorizontal
-                />
-
-                {/* OVERLAY */}
-                <div
-                  className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
-                  onClick={() => handleOpenModal(index + 1)}
-                />
-              </div>
-            ))}
-
-            <div
-              className="absolute hidden md:flex md:items-center md:justify-center left-3 bottom-3 px-4 py-2 rounded-xl bg-neutral-100 text-neutral-500 cursor-pointer hover:bg-neutral-200 z-10"
-              onClick={() => handleOpenModal(0)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                />
-              </svg>
-              <span className="ml-2 text-neutral-800 text-sm font-medium">
-                Show all photos
-              </span>
-            </div>
-          </div>
-        </header>
-        {/* MODAL PHOTOS */}
-        <ModalPhotos
-          imgs={PHOTOS}
-          isOpen={isOpen}
-          onClose={handleCloseModal}
-          initFocus={openFocusIndex}
-        />
-      </>
-
       <main className="container mt-11 flex justify-center">
         <div className="w-full lg:w-3/5 xl:w-2/3 space-y-8 lg:space-y-10 lg:pr-10 mb-4">
           {renderSection1()}
