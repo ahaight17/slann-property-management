@@ -7,6 +7,7 @@ import SiteHeader from "containers/SiteHeader";
 import AllListings from "containers/AllListings/AllListings";
 import PageAddListing from "containers/PageAddListing/PageAddListing2";
 import ListingStayDetailPage from "containers/ListingDetailPage/ListingStayDetailPage";
+import { withAuthenticationRequired } from '@auth0/auth0-react';
 
 export const pages: Page[] = [
   { path: "/", exact: true, component: AllListings },
