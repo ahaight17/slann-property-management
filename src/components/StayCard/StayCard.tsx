@@ -26,7 +26,7 @@ const StayCard: FC<StayCardProps> = ({
   setId,
 }) => {
   const photos = usePropertyPhotos(data._id)
-
+  
   const handleDeleteClick = (e:any) => {
     e.preventDefault()
     setDeleteOpen(true)

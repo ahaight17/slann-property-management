@@ -1,19 +1,11 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationIcon } from "@heroicons/react/solid";
-import AnyReactComponent from "components/AnyReactComponent/AnyReactComponent";
-import LocationMarker from "components/AnyReactComponent/LocationMarker";
-import Label from "components/Label/Label";
-import GoogleMapReact from "google-map-react";
 import { usePropertyPhotos } from "net/photos";
 import { useSingleProperty } from "net/properties";
 import React, { FC, Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
-import Checkbox from "shared/Checkbox/Checkbox";
-import Input from "shared/Input/Input";
-import Select from "shared/Select/Select";
-import Textarea from "shared/Textarea/Textarea";
-import FormItem from "./FormItem";
+import ReactLoading from 'react-loading'
 
 export interface PageEditPhotosProps {}
 
@@ -24,6 +16,7 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deletePhoto, setDeletePhoto]:any = useState();
   const [loading, setLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
   
   useEffect(() => {
     const $body = document.querySelector("body");
@@ -62,6 +55,40 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
     );
   };
 
+
+  const filesSelected = (e:any) => {
+    setUploading(true)
+    for(let i = 0; i < e.target.files.length; i++){
+      if(e.target.files[i].type.split('/')[0] === 'image'){
+        console.log(e.target.files[i])
+        uploadPhoto(e.target.files[i]).then((err) => {
+          if(err){
+            console.error(err)
+          }
+          setUploading(false)
+          window.location.assign(window.location.href)
+        })
+      }
+    }
+  }
+
+  const uploadPhoto = (photo:any) => {
+    const body = new FormData()
+    body.append('image', photo)
+
+    return new Promise((resolve, reject) => {
+      fetch(`${process.env.REACT_APP_API_SERVER}/photos/uploadPhoto/${params.id}/${photo.name}`, {
+        method: 'POST',
+        body: body
+      }).then(() => {
+        resolve(null)
+      }).catch((e) => {
+        console.error(e);
+        reject(e)
+      })
+    })
+  }
+
   const handleXClick = (e:any) => {
     e.target.classList.forEach((className:any, i:any) => {
       if(className.includes('photo-')){
@@ -99,6 +126,13 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
       data-nc-id="PageAddListing1"
     >
       <div className="space-y-11">
+        <div className="flex flex-col w-1/2 gap-y-2">
+          <span className="text-lg font-semibold">Upload Photos</span>
+          <div className="flex items-center gap-x-4">
+            <ButtonSecondary><input multiple type="file" accept="image/*" onChange={filesSelected}/> </ButtonSecondary>
+            { uploading && _renderLoading() }
+          </div>
+        </div>
         {/* <div>
           <span className="text-4xl font-semibold">{index}</span>{" "}
           <span className="text-lg text-neutral-500 dark:text-neutral-400">
@@ -112,6 +146,16 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
           <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
           {/* FORM */}
           <div className="space-y-8">
+            { photos.isLoading &&
+              <div>
+                <div className="flex justify-center items-center container relative pt-5 pb-16 lg:pb-20 lg:pt-5">
+                  {/* HEADER */}
+                  <header className="text-center max-w-2xl mx-auto space-y-2 my-16">
+                    <ReactLoading type="spin" color="#F56600" height={'50vh'} width={'25vw'}/>
+                  </header>
+                </div>
+              </div>
+            }
             { photos.data && 
               photos.data.map((photo:any, i:number) => (
                 <div className="flex items-center justify-between py-3">
@@ -127,7 +171,7 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
 
         
         <div className="flex justify-end space-x-5">
-          <ButtonSecondary>Finish</ButtonSecondary>
+          <ButtonSecondary onClick={() => window.location.assign(`${window.location.origin}/listing-detail/${params.id}`)}>Finish</ButtonSecondary>
         </div>
       </div>
       <Transition.Root show={deleteOpen} as={Fragment}>

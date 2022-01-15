@@ -55,12 +55,16 @@ const PageEditListing: any = () => {
         'Content-Type': 'application/json'
       }
     }).then(() => {
-      window.location.assign(`${window.location.origin}/edit-photos/${params.id}`)
+      window.location.assign(`${window.location.origin}/listing-detail/${params.id}`)
     }).catch((e) => {
       console.error(e)
     })
 
     return;
+  }
+
+  const handleCancel = () => {
+    window.location.assign(`${window.location.origin}/listing-detail/${params.id}`)
   }
 
   const geocodeLocation = () => {
@@ -69,7 +73,6 @@ const PageEditListing: any = () => {
       fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${params}&key=${process.env.REACT_APP_GCP_API_KEY}`).then((res) => {
         return res.json()
       }).then((data) => {
-        console.log(data);
         setFullLocation(data.results[0].formatted_address)
         setMap(data.results[0].geometry.location)
       }).catch((e) => {
@@ -230,6 +233,7 @@ const PageEditListing: any = () => {
             desc &&
             ( selected[0] || selected[1] ) &&
             <div className="flex justify-end space-x-5">
+            <ButtonSecondary onClick={handleCancel}>Cancel</ButtonSecondary>
               { submit && 
                 <ButtonSecondary loading>Submitting</ButtonSecondary>
               }

@@ -1,8 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import LocationMarker from "components/AnyReactComponent/LocationMarker";
 import GoogleMapReact from "google-map-react";
-import NcImage from "shared/NcImage/NcImage";
-import ModalPhotos from "./ModalPhotos";
 import { useParams } from "react-router-dom";
 import { useSingleProperty } from "net/properties";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
@@ -28,15 +26,6 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
     PHOTOS = property.data.photos
   }
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [openFocusIndex, setOpenFocusIndex] = useState(0);
-
-  const handleOpenModal = (index: number) => {
-    setIsOpen(true);
-    setOpenFocusIndex(index);
-  };
-
-  const handleCloseModal = () => setIsOpen(false);
 
   useEffect(() => {
     const $body = document.querySelector("body");
@@ -52,6 +41,10 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 
   const handleEditClick = () => {
     window.location.assign(`${window.location.origin}/edit-listing/${params.id}`);
+  }
+
+  const handlePhotosClick = () => {
+    window.location.assign(`${window.location.origin}/edit-photos/${params.id}`);
   }
 
   const renderSection1 = () => {
@@ -173,7 +166,8 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
       <main className="container mt-11 flex justify-center">
         <div className="w-full lg:w-3/5 xl:w-2/3 space-y-8 lg:space-y-10 lg:pr-10 mb-4">
           <div className="flex justify-end space-x-5">
-            <ButtonSecondary onClick={handleEditClick}>EDIT LISTING</ButtonSecondary>
+            <ButtonSecondary onClick={handleEditClick}>Edit Listing</ButtonSecondary>
+            <ButtonSecondary onClick={handlePhotosClick}>Edit Photos</ButtonSecondary>
           </div>
           {renderSection1()}
           {renderSection2()}
