@@ -52,7 +52,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
       <div className="listingSection__wrap !space-y-6">
 
         {/* 2 */}
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold capitalize">
           { property.data ? property.data.address : '---'}
         </h2>
 
@@ -62,7 +62,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
           <span>·</span> */}
           <span>
             <i className="las la-map-marker-alt"></i>
-            <span className="ml-1">{ property.data ? `${property.data.city}, ${property.data.state}` : '--, --'}</span>
+            <span className="capitalize ml-1">{ property.data ? `${property.data.city}, ${property.data.state.toUpperCase()}` : '--, --'}</span>
           </span>
           <span className="flex items-start justify-start px-3 py-2 border border-primary-50 rounded leading-none text-base font-medium text-primary-50">
             { property.data ? `$${property.data.price}/mo` : '---/mo'}
@@ -87,19 +87,19 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
           <div className="flex items-center space-x-3">
             <i className=" las la-bed text-2xl"></i>
             <span className=" ">
-              { property.data ? property.data.bedrooms : '--' } <span className="hidden sm:inline-block">bedrooms</span>
+              { property.data ? property.data.bedrooms : '--' } <span className="hidden sm:inline-block">Bedrooms</span>
             </span>
           </div>
           <div className="flex items-center space-x-3">
             <i className=" las la-bath text-2xl"></i>
             <span className=" ">
-            { property.data ? property.data.bathrooms : '--' } <span className="hidden sm:inline-block">baths</span>
+            { property.data ? property.data.bathrooms : '--' } <span className="hidden sm:inline-block">Baths</span>
             </span>
           </div>
           <div className="flex items-center space-x-3">
             <i className=" las la-expand-arrows-alt text-2xl"></i>
             <span className=" ">
-            { property.data ? property.data.sqft : '--' } <span className="hidden sm:inline-block">sq ft</span>
+            { property.data ? property.data.sqft : '--' } <span className="hidden sm:inline-block">Sq Ft</span>
             </span>
           </div>
         </div>
@@ -110,7 +110,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
   const renderSection2 = () => {
     return (
       <div className="listingSection__wrap">
-        <h2 className="text-2xl font-semibold">Stay information</h2>
+        <h2 className="text-2xl font-semibold">Description</h2>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
         <div className="text-neutral-6000 dark:text-neutral-300 grid gap-y-2">
           { property.data && 
