@@ -3,6 +3,7 @@ import { ExclamationIcon } from "@heroicons/react/solid";
 import { usePropertyPhotos } from "net/photos";
 import { useSingleProperty } from "net/properties";
 import React, { FC, Fragment, useEffect, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { useParams } from "react-router-dom";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
 import ReactLoading from 'react-loading'
@@ -17,7 +18,9 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
   const [deletePhoto, setDeletePhoto]:any = useState();
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
-  
+  const [submit, setSubmit]:any = useState(false);
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+
   useEffect(() => {
     const $body = document.querySelector("body");
     if ($body) {
@@ -72,13 +75,18 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
     }
   }
 
-  const uploadPhoto = (photo:any) => {
+  const uploadPhoto = async (photo:any) => {
+    const token = await getAccessTokenSilently();
+
     const body = new FormData()
     body.append('image', photo)
 
     return new Promise((resolve, reject) => {
       fetch(`${process.env.REACT_APP_API_SERVER}/photos/uploadPhoto/${params.id}/${photo.name}`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
         body: body
       }).then(() => {
         resolve(null)
@@ -100,7 +108,9 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
     setDeleteOpen(true)
   }
 
-  const handleDeleteImage = () => {
+  const handleDeleteImage = async () => {
+    const token = await getAccessTokenSilently();
+
     setLoading(true)
     fetch(`${process.env.REACT_APP_API_SERVER}/photos/deletePhoto/`, {
       method: 'DELETE',
@@ -108,7 +118,8 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
         key: deletePhoto.key
       }),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       }
     }).then(() => {
       setLoading(false)
@@ -156,7 +167,7 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
                 </div>
               </div>
             }
-            { photos.data && 
+            { photos.data &&
               photos.data.map((photo:any, i:number) => (
                 <div className="flex items-center justify-between py-3">
                   <span className="text-neutral-6000 dark:text-neutral-400 font-medium">
@@ -169,7 +180,7 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
           </div>
         </div>
 
-        
+
         <div className="flex justify-end space-x-5">
           <ButtonSecondary onClick={() => window.location.assign(`${window.location.origin}/listing-detail/${params.id}`)}>Finish</ButtonSecondary>
         </div>
@@ -218,7 +229,7 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
                       </p>
                     </div>
                     <div className="mt-2">
-                      { deletePhoto && 
+                      { deletePhoto &&
                         <img src={deletePhoto.url} />
                       }
                     </div>

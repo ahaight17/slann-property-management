@@ -19,12 +19,13 @@ ReactDOM.render(
     domain="andrewemery.us.auth0.com"
     clientId="5AbLRIhmMXMzidsErLruOQAg2gY4At8Y"
     redirectUri={window.location.origin}
+    audience="https://tal-tiny-ween-api"
   >
     <App />
   </Auth0Provider>
   , document.getElementById("root"));
 
-  
+
 // ReactDOM.render(<App />, document.getElementById("root"));
 
 // If you want to start measuring performance in your app, pass a function

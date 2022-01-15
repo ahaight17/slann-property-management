@@ -2,6 +2,7 @@ import Label from "components/Label/Label";
 import ReactLoading from 'react-loading'
 import { useSingleProperty } from "net/properties";
 import React, { FC, useEffect, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { useParams } from "react-router-dom";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
 import Checkbox from "shared/Checkbox/Checkbox";
@@ -23,7 +24,8 @@ const PageEditListing: any = () => {
   const [selected, setSelected]:any[] = useState([false, false])
   const [aMonth, setAMonth]:any = useState('January')
   const [aYear, setAYear]:any = useState(new Date().getUTCFullYear());
-  const [submit, setSubmit]:any = useState(false)
+  const [submit, setSubmit]:any = useState(false);
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   // default to clemson
   const [map, setMap]:any = useState({lat: 34.688679, lng: -82.834877})
@@ -31,8 +33,9 @@ const PageEditListing: any = () => {
 
   const property = useSingleProperty(params.id)
 
-  const handleClick = () => {
+  const handleClick = async () => {
     setSubmit(true)
+    const token = await getAccessTokenSilently();
 
     const body = {
       title: address,
@@ -52,7 +55,8 @@ const PageEditListing: any = () => {
       method: 'POST',
       body: JSON.stringify(body),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       }
     }).then(() => {
       window.location.assign(`${window.location.origin}/listing-detail/${params.id}`)
@@ -109,7 +113,7 @@ const PageEditListing: any = () => {
       }
     }
   }, [property.data])
-  
+
   useEffect(() => {
     const $body = document.querySelector("body");
     if ($body) {
@@ -121,6 +125,7 @@ const PageEditListing: any = () => {
       }
     };
   }, [])
+
 
   if(property.isLoading){
     return (
@@ -146,7 +151,7 @@ const PageEditListing: any = () => {
               / 10
             </span>
           </div> */}
-  
+
           {/* --------------------- */}
           <div className="listingSection__wrap ">
             <h2 className="text-2xl font-semibold">Edit Listing</h2>
@@ -194,7 +199,7 @@ const PageEditListing: any = () => {
                   <Checkbox label="Unavailable" name="Unavailable" onChange={(e) => setSelected((old:any) => [old[0], e])} disabled={selected[0]} checked={selected[1]}/>
                 </div>
               </FormItem>
-              { selected[1] && 
+              { selected[1] &&
                 <FormItem label="Available when?">
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     <FormItem label="Month">
@@ -221,23 +226,23 @@ const PageEditListing: any = () => {
               }
             </div>
           </div>
-  
+
           {/* --------------------- */}
           { address &&
             city &&
             state &&
-            rent && 
+            rent &&
             beds &&
-            baths && 
+            baths &&
             sqft &&
             desc &&
             ( selected[0] || selected[1] ) &&
             <div className="flex justify-end space-x-5">
             <ButtonSecondary onClick={handleCancel}>Cancel</ButtonSecondary>
-              { submit && 
+              { submit &&
                 <ButtonSecondary loading>Submitting</ButtonSecondary>
               }
-              { !submit && 
+              { !submit &&
                 <ButtonSecondary onClick={handleClick}>Submit</ButtonSecondary>
               }
             </div>
