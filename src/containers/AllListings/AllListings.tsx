@@ -1,5 +1,7 @@
 import StayCard from "components/StayCard/StayCard";
 import  { FC, useEffect, useState, Fragment } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+
 import { Helmet } from "react-helmet";
 import { Dialog, Transition } from "@headlessui/react";
 import { useAllProperties } from "net/properties";
@@ -7,12 +9,14 @@ import TabFilters from "./TabFilters";
 import ButtonPrimary from "shared/Button/ButtonPrimary";
 import { ExclamationIcon } from "@heroicons/react/solid";
 
+
+
 export interface AuthorPageProps {
   className?: string;
 }
 
 const AllListings: FC<AuthorPageProps> = ({ className = "" }) => {
-  
+
   const properties = useAllProperties();
 
   const [listings, setListings]:any = useState([])
@@ -22,6 +26,8 @@ const AllListings: FC<AuthorPageProps> = ({ className = "" }) => {
   const [name, setName] = useState()
   const [id, setId] = useState()
   const [loading, setLoading] = useState(false)
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+
 
   useEffect(() => {
     if(properties.data){
@@ -45,7 +51,7 @@ const AllListings: FC<AuthorPageProps> = ({ className = "" }) => {
       setListings([...sorted])
     }
   }, [sort, properties.data])
-  
+
   useEffect(() => {
     const $body = document.querySelector("body");
     if ($body) {
@@ -83,10 +89,13 @@ const AllListings: FC<AuthorPageProps> = ({ className = "" }) => {
     );
   };
 
-  const handlePropertyDelete = () => {
+  const handlePropertyDelete = async () => {
     setLoading(true)
+    const token = await getAccessTokenSilently();
+
     fetch(`${process.env.REACT_APP_API_SERVER}/property/deleteProperty/${id}`, {
       method: 'DELETE',
+      headers: {'Authorization': `Bearer ${token}`}
     }).then(() => {
       setDeleteOpen(false)
       setLoading(false)
