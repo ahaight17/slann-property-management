@@ -54,7 +54,8 @@ const PageAddListing: FC<PageAddListingProps> = () => {
       method: 'POST',
       body: JSON.stringify(body),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       }
     }).then((res) => {
       return res.json()
@@ -86,7 +87,7 @@ const PageAddListing: FC<PageAddListingProps> = () => {
       geocodeLocation();
     }
   }, [address, city, state])
-  
+
   useEffect(() => {
     const $body = document.querySelector("body");
     if ($body) {
@@ -159,7 +160,7 @@ const PageAddListing: FC<PageAddListingProps> = () => {
                 <Checkbox label="Unavailable" name="Unavailable" onChange={(e) => setSelected((old:any) => [old[0], e])} disabled={selected[0]} checked={selected[1]}/>
               </div>
             </FormItem>
-            { selected[1] && 
+            { selected[1] &&
               <FormItem label="Available when?">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   <FormItem label="Month">
@@ -191,17 +192,17 @@ const PageAddListing: FC<PageAddListingProps> = () => {
         { address &&
           city &&
           state &&
-          rent && 
+          rent &&
           beds &&
-          baths && 
+          baths &&
           sqft &&
           desc &&
           ( selected[0] || selected[1] ) &&
           <div className="flex justify-end space-x-5">
-            { submit && 
+            { submit &&
               <ButtonSecondary loading>Submitting</ButtonSecondary>
             }
-            { !submit && 
+            { !submit &&
               <ButtonSecondary onClick={handleClick}>Submit</ButtonSecondary>
             }
           </div>
