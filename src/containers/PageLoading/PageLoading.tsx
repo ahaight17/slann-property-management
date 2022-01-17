@@ -17,7 +17,7 @@ const PageLoading: React.FC = () => {
   }, []);
 
   return (
-    <div className="nc-Page404">
+    <div className="nc-Page404 mt-20">
       <Helmet>
         <title>Slann Properties || Management</title>
       </Helmet>
