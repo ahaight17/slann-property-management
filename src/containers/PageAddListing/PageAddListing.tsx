@@ -2,6 +2,7 @@ import LocationMarker from "components/AnyReactComponent/LocationMarker";
 import Label from "components/Label/Label";
 import GoogleMapReact from "google-map-react";
 import React, { FC, useEffect, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { useParams } from "react-router-dom";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
 import Checkbox from "shared/Checkbox/Checkbox";
@@ -26,13 +27,17 @@ const PageAddListing: FC<PageAddListingProps> = () => {
   const [aMonth, setAMonth]:any = useState('January')
   const [aYear, setAYear]:any = useState(new Date().getUTCFullYear());
   const [submit, setSubmit]:any = useState(false)
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+
 
   // default to clemson
   const [map, setMap]:any = useState({lat: 34.688679, lng: -82.834877})
   const [fulllLocation, setFullLocation]:any = useState();
 
-  const handleClick = () => {
+  const handleClick = async () => {
     setSubmit(true)
+    const token = await getAccessTokenSilently();
+
 
     const body = {
       featuredImage: '',
