@@ -17,8 +17,9 @@ const PageAddListing: FC<PageAddListingProps> = () => {
   const params:any = useParams()
   const [address, setAddress]:any = useState(undefined)
   const [city, setCity]:any = useState(undefined)
-  const [state, setState]:any = useState(undefined)
+  const [state, setState]:any = useState('SC')
   const [rent, setRent]:any = useState(undefined)
+  const [deposit, setDeposit]:any = useState(undefined)
   const [sqft, setSqft]:any = useState(undefined)
   const [beds, setBeds]:any = useState(undefined)
   const [baths, setBaths]:any = useState(undefined)
@@ -47,6 +48,7 @@ const PageAddListing: FC<PageAddListingProps> = () => {
       city: city,
       state: state,
       price: rent,
+      deposit: deposit,
       bedrooms: beds,
       bathrooms: baths,
       sqft: sqft,
@@ -136,15 +138,20 @@ const PageAddListing: FC<PageAddListingProps> = () => {
               </FormItem>
             </div>
             <div>
-              <Label>Generated Detailed address</Label>
+              <Label>Generated Detailed Address</Label>
               <div className="mt-2 w-20 border-b border-neutral-200 dark:border-neutral-700"></div>
               <span className="block mt-1 text-sm text-neutral-500 dark:text-neutral-400">
                 {fulllLocation}
               </span>
             </div>
-            <FormItem label="Rent/month">
-              <Input type="number" pattern="\d*" onChange={(e) => setRent(e.target.value)} value={rent}/>
-            </FormItem>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-5">
+              <FormItem label="Rent/month">
+                <Input type="number" pattern="\d*" onChange={(e) => setRent(e.target.value)} value={rent}/>
+              </FormItem>
+              <FormItem label="Security Deposit">
+                <Input type="number" pattern="\d*" onChange={(e) => setDeposit(e.target.value)} value={deposit}/>
+              </FormItem>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-5">
               <FormItem label="Beds">
                 <Input type="number" onChange={(e) => setBeds(e.target.value)} value={beds}/>

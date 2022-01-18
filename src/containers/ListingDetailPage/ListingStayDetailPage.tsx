@@ -18,7 +18,6 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
   let PHOTOS: string[] = ['./']
 
   const property = useSingleProperty(params.id)
-  console.log(property)
 
   if(property.data && Object.entries(property.data).length === 0) window.location.assign(window.location.origin)
 
