@@ -15,16 +15,10 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
   isPreviewMode,
 }) => {
   const params:any = useParams()
-  let PHOTOS: string[] = ['./']
 
   const property = useSingleProperty(params.id)
 
   if(property.data && Object.entries(property.data).length === 0) window.location.assign(window.location.origin)
-
-  if(property.data){
-    PHOTOS = property.data.photos
-  }
-
 
   useEffect(() => {
     const $body = document.querySelector("body");
@@ -56,18 +50,16 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
         </h2>
 
         {/* 3 */}
-        <div className="flex items-center space-x-4">
-          {/* <StartRating />
-          <span>·</span> */}
+        <div className="flex items-start space-x-4">
           <span>
             <i className="las la-map-marker-alt"></i>
-            <span className="capitalize ml-1">{ property.data ? `${property.data.city}, ${property.data.state.toUpperCase()}` : '--, --'}</span>
+            <span className="capitalize ml-1 whitespace-nowrap">{ property.data ? `${property.data.city}, ${property.data.state.toUpperCase()}` : '--, --'}</span>
           </span>
           <span className="flex items-start justify-start px-3 py-2 border border-primary-50 rounded leading-none text-base font-medium text-primary-50">
             { property.data ? `$${property.data.price}/mo` : '---/mo'}
           </span>
           { property.data && 
-            <div className="flex items-center justify-center gap-x-4">
+            <div className="flex flex-col items-center justify-end gap-x-4">
               <span className={`flex items-center justify-center px-3 py-2 border rounded leading-none text-base font-medium ${property.data.available !== true ? 'border-neutral-500 text-neutral-500' : 'border-secondary-500 text-secondary-500'}`}>
                 { property.data.available === true ? 'AVAILABLE' : 'UNAVAILABLE' }
               </span>

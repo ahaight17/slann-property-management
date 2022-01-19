@@ -7,24 +7,27 @@ import { useParams } from "react-router-dom";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
 import Checkbox from "shared/Checkbox/Checkbox";
 import Input from "shared/Input/Input";
-import Select from "shared/Select/Select";
 import Textarea from "shared/Textarea/Textarea";
 import FormItem from "./FormItem";
+import { SingleDatePicker, AnchorDirectionShape } from "react-dates";
+import useWindowSize from "hooks/useWindowResize";
+import moment from "moment";
 
 const PageEditListing: any = () => {
   const params:any = useParams()
   const [address, setAddress]:any = useState(undefined)
   const [city, setCity]:any = useState(undefined)
   const [state, setState]:any = useState(undefined)
+  const [deposit, setDeposit]:any = useState(undefined)
   const [rent, setRent]:any = useState(undefined)
   const [sqft, setSqft]:any = useState(undefined)
   const [beds, setBeds]:any = useState(undefined)
   const [baths, setBaths]:any = useState(undefined)
   const [desc, setDesc]:any = useState(undefined)
   const [selected, setSelected]:any[] = useState([false, false])
-  const [aMonth, setAMonth]:any = useState('January')
-  const [aYear, setAYear]:any = useState(new Date().getUTCFullYear());
   const [submit, setSubmit]:any = useState(false);
+  const [availableDate, setAvailableDate]:any = useState(null);
+  const [focusedInput, setFocusedInput] = useState(false);
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   // default to clemson
@@ -32,6 +35,8 @@ const PageEditListing: any = () => {
   const [fulllLocation, setFullLocation]:any = useState();
 
   const property = useSingleProperty(params.id)
+
+  const windowSize = useWindowSize()
 
   const handleClick = async () => {
     setSubmit(true)
@@ -43,10 +48,11 @@ const PageEditListing: any = () => {
       city: city,
       state: state,
       price: rent,
+      deposit: deposit,
       bedrooms: beds,
       bathrooms: baths,
       sqft: sqft,
-      available: (selected[1] && aMonth !== undefined && aYear !== undefined) ? `${aMonth} ${aYear}` : true,
+      available: (selected[1] && availableDate !== null) ? availableDate.format('MMMM DD YYYY') : true,
       description: desc,
       map: map
     }
@@ -93,11 +99,11 @@ const PageEditListing: any = () => {
 
   useEffect(() => {
     if(property.data){
-      console.log(property.data)
       setAddress(property.data.address)
       setCity(property.data.city)
       setState(property.data.state)
       setRent(property.data.price)
+      setDeposit(property.data.deposit)
       setSqft(property.data.sqft)
       setBeds(property.data.bedrooms)
       setBaths(property.data.bathrooms)
@@ -106,10 +112,8 @@ const PageEditListing: any = () => {
       if(property.data.available === true){
         setSelected([property.data.available, false])
       } else {
-        let s = property.data.available.split(' ')
         setSelected([false, true])
-        setAMonth(s[0])
-        setAYear(s[1])
+        setAvailableDate(moment(property.data.available))
       }
     }
   }, [property.data])
@@ -125,6 +129,45 @@ const PageEditListing: any = () => {
       }
     };
   }, [])
+
+  const handleDateFocusChange = (arg: { focused: boolean }) => {
+    setFocusedInput(arg.focused);
+  };
+  
+  const renderInputCheckInDate = () => {
+    const focused = focusedInput;
+    return (
+      <div
+        className={`flex w-full relative items-center space-x-3 cursor-pointer ${
+          focused ? "shadow-2xl rounded-full" : ""
+        }`}
+        onClick={() => handleDateFocusChange({ focused: true })}
+      >
+        <div className="text-neutral-300 dark:text-neutral-400">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="nc-icon-field"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+        </div>
+        <div className="flex-grow">
+          <span className="block xl:text-lg font-semibold">
+            {availableDate ? availableDate.format('MMMM DD YYYY') : "Piack a Date"}
+          </span>
+          
+        </div>
+      </div>
+    );
+  };
 
 
   if(property.isLoading){
@@ -145,12 +188,6 @@ const PageEditListing: any = () => {
         data-nc-id="PageAddListing1"
       >
         <div className="space-y-11">
-          {/* <div>
-            <span className="text-4xl font-semibold">{index}</span>{" "}
-            <span className="text-lg text-neutral-500 dark:text-neutral-400">
-              / 10
-            </span>
-          </div> */}
 
           {/* --------------------- */}
           <div className="listingSection__wrap ">
@@ -176,9 +213,14 @@ const PageEditListing: any = () => {
                   {fulllLocation}
                 </span>
               </div>
-              <FormItem label="Rent/month">
-                <Input type="number" pattern="\d*" onChange={(e) => setRent(e.target.value)} value={rent}/>
-              </FormItem>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-5">
+                <FormItem label="Rent/month">
+                  <Input type="number" pattern="\d*" onChange={(e) => setRent(e.target.value)} value={rent}/>
+                </FormItem>
+                <FormItem label="Security Deposit">
+                  <Input type="number" pattern="\d*" onChange={(e) => setDeposit(e.target.value)} value={deposit}/>
+                </FormItem>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-5">
                 <FormItem label="Beds">
                   <Input type="number" onChange={(e) => setBeds(e.target.value)} value={beds}/>
@@ -200,29 +242,25 @@ const PageEditListing: any = () => {
                 </div>
               </FormItem>
               { selected[1] &&
-                <FormItem label="Available when?">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                    <FormItem label="Month">
-                      <Select onChange={(e) => setAMonth(e.target.value)} value={aMonth}>
-                        <option value="January">January</option>
-                        <option value="February">February</option>
-                        <option value="March">March</option>
-                        <option value="April">April</option>
-                        <option value="May">May</option>
-                        <option value="June">June</option>
-                        <option value="July">July</option>
-                        <option value="Ausust">Ausust</option>
-                        <option value="September">September</option>
-                        <option value="October">October</option>
-                        <option value="November">November</option>
-                        <option value="December">December</option>
-                      </Select>
-                    </FormItem>
-                    <FormItem label="Year">
-                      <Input type="number" onChange={(e) => setAYear(e.target.value)} value={aYear}/>
-                    </FormItem>
+                <div className={`relative flex`} style={{ flex: "1 0 0%" }}>
+                  <div className="absolute inset-x-0 bottom-0">
+                    <SingleDatePicker
+                      date={availableDate}
+                      onDateChange={(date) => setAvailableDate(date)}
+                      id={"nc-hero-ExperiencesDateSingleInput-availableDateId"}
+                      focused={focusedInput}
+                      daySize={windowSize.width > 425 ? 56 : undefined}
+                      orientation={"horizontal"}
+                      onFocusChange={handleDateFocusChange}
+                      noBorder
+                      hideKeyboardShortcutsPanel
+                      keepOpenOnDateSelect
+                      numberOfMonths={1}
+                    />
                   </div>
-                </FormItem>
+
+                  {renderInputCheckInDate()}
+                </div>
               }
             </div>
           </div>

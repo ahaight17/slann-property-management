@@ -7,7 +7,6 @@ import SiteHeader from "containers/SiteHeader";
 import AllListings from "containers/AllListings/AllListings";
 import PageAddListing from "containers/PageAddListing/PageAddListing";
 import ListingStayDetailPage from "containers/ListingDetailPage/ListingStayDetailPage";
-import { withAuthenticationRequired } from '@auth0/auth0-react';
 import PageLoading from "containers/PageLoading/PageLoading";
 import PageEditListing from "containers/PageEditListing/PageEditListing";
 import PageEditPhotos from "containers/PageEditPhotos/PageEditPhotos";

@@ -1,12 +1,10 @@
 import StayCard from "components/StayCard/StayCard";
 import  { FC, useEffect, useState, Fragment } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-
 import { Helmet } from "react-helmet";
 import { Dialog, Transition } from "@headlessui/react";
 import { useAllProperties } from "net/properties";
 import TabFilters from "./TabFilters";
-import ButtonPrimary from "shared/Button/ButtonPrimary";
 import { ExclamationIcon } from "@heroicons/react/solid";
 
 
