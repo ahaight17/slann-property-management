@@ -52,7 +52,7 @@ const PageEditListing: any = () => {
       bedrooms: beds,
       bathrooms: baths,
       sqft: sqft,
-      available: (selected[1] && availableDate !== null) ? availableDate.format('MMMM DD YYYY') : true,
+      available: (selected[1] && availableDate !== null) ? availableDate.format('MMMM DD, YYYY') : true,
       description: desc,
       map: map
     }
@@ -161,7 +161,7 @@ const PageEditListing: any = () => {
         </div>
         <div className="flex-grow">
           <span className="block xl:text-lg font-semibold">
-            {availableDate ? availableDate.format('MMMM DD YYYY') : "Piack a Date"}
+            {availableDate ? availableDate.format('MMMM DD, YYYY') : "Piack a Date"}
           </span>
           
         </div>
