@@ -63,7 +63,6 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
     setUploading(true)
     for(let i = 0; i < e.target.files.length; i++){
       if(e.target.files[i].type.split('/')[0] === 'image'){
-        console.log(e.target.files[i])
         uploadPhoto(e.target.files[i]).then((err) => {
           if(err){
             console.error(err)
