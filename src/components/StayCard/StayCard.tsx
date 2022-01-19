@@ -90,9 +90,14 @@ const StayCard: FC<StayCardProps> = ({
         </div>
         <div className="w-14 border-b border-neutral-100 dark:border-neutral-800"></div>
         <div className="flex justify-between items-center">
-          <span className="text-base font-semibold">
-            ${data.price}/mo
-          </span>
+          <div className="flex flex-col gap-y-2">
+            <span className="text-base font-semibold">
+              ${data.price}/mo
+            </span>
+            <span className="text-base font-semibold">
+              {`$${data.deposit} Deposit`}
+            </span>
+          </div>
           <div className="flex flex-col items-center">
             <span className={`flex items-center justify-center px-3 py-2 border rounded leading-none text-base font-medium ${data.available !== true ? 'border-neutral-500 text-neutral-500' : 'border-secondary-500 text-secondary-500'}`}>
               { data.available === true ? 'AVAILABLE' : 'UNAVAILABLE' }

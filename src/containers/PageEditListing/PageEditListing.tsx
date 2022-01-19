@@ -9,7 +9,7 @@ import Checkbox from "shared/Checkbox/Checkbox";
 import Input from "shared/Input/Input";
 import Textarea from "shared/Textarea/Textarea";
 import FormItem from "./FormItem";
-import { SingleDatePicker, AnchorDirectionShape } from "react-dates";
+import { SingleDatePicker } from "react-dates";
 import useWindowSize from "hooks/useWindowResize";
 import moment from "moment";
 

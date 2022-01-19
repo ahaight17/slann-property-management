@@ -1,15 +1,14 @@
-import LocationMarker from "components/AnyReactComponent/LocationMarker";
 import Label from "components/Label/Label";
-import GoogleMapReact from "google-map-react";
 import React, { FC, useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useParams } from "react-router-dom";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
 import Checkbox from "shared/Checkbox/Checkbox";
 import Input from "shared/Input/Input";
-import Select from "shared/Select/Select";
 import Textarea from "shared/Textarea/Textarea";
 import FormItem from "./FormItem";
+import { SingleDatePicker } from "react-dates";
+import useWindowSize from "hooks/useWindowResize";
 
 export interface PageAddListingProps {}
 
@@ -25,11 +24,12 @@ const PageAddListing: FC<PageAddListingProps> = () => {
   const [baths, setBaths]:any = useState(undefined)
   const [desc, setDesc]:any = useState(undefined)
   const [selected, setSelected]:any[] = useState([false, false])
-  const [aMonth, setAMonth]:any = useState('January')
-  const [aYear, setAYear]:any = useState(new Date().getUTCFullYear());
+  const [availableDate, setAvailableDate]:any = useState(null);
+  const [focusedInput, setFocusedInput] = useState(false);
   const [submit, setSubmit]:any = useState(false)
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
+  const windowSize = useWindowSize()
 
   // default to clemson
   const [map, setMap]:any = useState({lat: 34.688679, lng: -82.834877})
@@ -52,7 +52,7 @@ const PageAddListing: FC<PageAddListingProps> = () => {
       bedrooms: beds,
       bathrooms: baths,
       sqft: sqft,
-      available: (selected[1] && aMonth !== undefined && aYear !== undefined) ? `${aMonth} ${aYear}` : true,
+      available: (selected[1] && availableDate !== null) ? availableDate.format('MMMM DD YYYY') : true,
       description: desc,
       map: map
     }
@@ -106,6 +106,45 @@ const PageAddListing: FC<PageAddListingProps> = () => {
       }
     };
   }, [])
+
+  const handleDateFocusChange = (arg: { focused: boolean }) => {
+    setFocusedInput(arg.focused);
+  };
+  
+  const renderInputCheckInDate = () => {
+    const focused = focusedInput;
+    return (
+      <div
+        className={`flex w-full relative items-center space-x-3 cursor-pointer ${
+          focused ? "shadow-2xl rounded-full" : ""
+        }`}
+        onClick={() => handleDateFocusChange({ focused: true })}
+      >
+        <div className="text-neutral-300 dark:text-neutral-400">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="nc-icon-field"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+        </div>
+        <div className="flex-grow">
+          <span className="block xl:text-lg font-semibold">
+            {availableDate ? availableDate.format('MMMM DD YYYY') : "Piack a Date"}
+          </span>
+          
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div
@@ -173,29 +212,25 @@ const PageAddListing: FC<PageAddListingProps> = () => {
               </div>
             </FormItem>
             { selected[1] &&
-              <FormItem label="Available when?">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                  <FormItem label="Month">
-                    <Select onChange={(e) => setAMonth(e.target.value)} value={aMonth}>
-                      <option value="January">January</option>
-                      <option value="February">February</option>
-                      <option value="March">March</option>
-                      <option value="April">April</option>
-                      <option value="May">May</option>
-                      <option value="June">June</option>
-                      <option value="July">July</option>
-                      <option value="Ausust">Ausust</option>
-                      <option value="September">September</option>
-                      <option value="October">October</option>
-                      <option value="November">November</option>
-                      <option value="December">December</option>
-                    </Select>
-                  </FormItem>
-                  <FormItem label="Year">
-                    <Input type="number" onChange={(e) => setAYear(e.target.value)} value={aYear}/>
-                  </FormItem>
+                <div className={`relative flex`} style={{ flex: "1 0 0%" }}>
+                  <div className="absolute inset-x-0 bottom-0">
+                    <SingleDatePicker
+                      date={availableDate}
+                      onDateChange={(date) => setAvailableDate(date)}
+                      id={"nc-hero-ExperiencesDateSingleInput-availableDateId"}
+                      focused={focusedInput}
+                      daySize={windowSize.width > 425 ? 56 : undefined}
+                      orientation={"horizontal"}
+                      onFocusChange={handleDateFocusChange}
+                      noBorder
+                      hideKeyboardShortcutsPanel
+                      keepOpenOnDateSelect
+                      numberOfMonths={1}
+                    />
+                  </div>
+
+                  {renderInputCheckInDate()}
                 </div>
-              </FormItem>
             }
           </div>
         </div>
