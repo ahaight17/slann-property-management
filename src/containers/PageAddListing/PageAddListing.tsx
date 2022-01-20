@@ -41,8 +41,6 @@ const PageAddListing: FC<PageAddListingProps> = () => {
 
 
     const body = {
-      featuredImage: '',
-      galleryImgs: [],
       title: address,
       address: address,
       city: city,

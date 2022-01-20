@@ -61,17 +61,21 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
 
   const filesSelected = (e:any) => {
     setUploading(true)
+    const photoUpload = []
     for(let i = 0; i < e.target.files.length; i++){
       if(e.target.files[i].type.split('/')[0] === 'image'){
-        uploadPhoto(e.target.files[i]).then((err) => {
-          if(err){
-            console.error(err)
-          }
-          setUploading(false)
-          window.location.assign(window.location.href)
-        })
+        photoUpload.push(uploadPhoto(e.target.files[i]))
       }
     }
+    Promise.all(photoUpload).then((res) => {
+      console.log(res)
+      setUploading(false)
+      window.location.assign(window.location.href)
+    }).catch((err) => {
+      console.error(err)
+      setUploading(false)
+      window.location.assign(window.location.href)
+    })
   }
 
   const uploadPhoto = async (photo:any) => {
