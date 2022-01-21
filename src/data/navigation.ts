@@ -14,5 +14,11 @@ export const NAVIGATION_DEMO: NavItemType[] = [
     href: "/add-listing",
     name: "Add Listing",
     type: "none",
+  },
+  {
+    id: ncNanoId(),
+    href: "/settings",
+    name: "Settings",
+    type: "none",
   }
 ];

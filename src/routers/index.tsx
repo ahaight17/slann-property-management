@@ -10,10 +10,12 @@ import ListingStayDetailPage from "containers/ListingDetailPage/ListingStayDetai
 import PageLoading from "containers/PageLoading/PageLoading";
 import PageEditListing from "containers/PageEditListing/PageEditListing";
 import PageEditPhotos from "containers/PageEditPhotos/PageEditPhotos";
+import Settings from "containers/Settings/Settings";
 
 export const pages: Page[] = [
   { path: "/", exact: true, component: AllListings },
   { path: "/add-listing", component: PageAddListing },
+  { path: "/settings", component: Settings },
   { path: "/listing-detail/:id", component: ListingStayDetailPage },
   { path: "/edit-listing/:id", component: PageEditListing },
   { path: "/edit-photos/:id", component: PageEditPhotos },
