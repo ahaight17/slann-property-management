@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import { fetcher } from "./fetcher";
 
-export function useSettings(id){
+export function useSettings(){
   const { data, err } = useSWR(`/settings/getSettings`, fetcher)
 
   return {
