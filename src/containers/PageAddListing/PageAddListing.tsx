@@ -201,7 +201,7 @@ const PageAddListing: FC<PageAddListingProps> = () => {
               </FormItem>
             </div>
             <FormItem label="Description">
-              <Textarea rows={2} onChange={(e) => setDesc(e.target.value)} value={desc}/>
+              <Textarea rows={6} onChange={(e) => setDesc(e.target.value)} value={desc}/>
             </FormItem>
             <FormItem label="Property Availability">
               <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
