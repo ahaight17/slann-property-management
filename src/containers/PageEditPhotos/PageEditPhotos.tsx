@@ -156,7 +156,10 @@ const PageEditPhotos: FC<PageEditPhotosProps> = () => {
 
         {/* --------------------- */}
         <div className="listingSection__wrap ">
-          <h2 className="text-2xl font-semibold">Edit Photos for { property.data && property.data.title}</h2>
+          <div className="flex justify-between">
+            <h2 className="text-2xl font-semibold">Edit Photos for { property.data && property.data.title}</h2>
+            <h2 className="text-2xl font-semibold">({ photos.data && photos.data.length} photos)</h2>
+          </div>
           <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
           {/* FORM */}
           <div className="space-y-8">
