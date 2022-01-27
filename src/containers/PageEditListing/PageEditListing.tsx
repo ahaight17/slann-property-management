@@ -88,7 +88,6 @@ const PageEditListing: any = () => {
     let difflon = (CLEMSON.lng - location.lng) * toRadian
 
     let d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(rl1)*Math.cos(rl2)*Math.sin(difflon/2)*Math.sin(difflon/2)));
-    console.log(d)
     setDistance(d);
   }
 
@@ -125,6 +124,7 @@ const PageEditListing: any = () => {
       setBaths(property.data.bathrooms)
       setDesc(property.data.description)
       setMap(property.data.map)
+      setDistance(property.data.distance)
       if(property.data.available === true){
         setSelected([property.data.available, false])
       } else {
