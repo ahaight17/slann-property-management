@@ -9,6 +9,9 @@ import Textarea from "shared/Textarea/Textarea";
 import FormItem from "./FormItem";
 import { SingleDatePicker } from "react-dates";
 import useWindowSize from "hooks/useWindowResize";
+const CLEMSON = {lat: 34.688679, lng: -82.834877}
+const R = 3958.8
+const toRadian = (Math.PI/180)
 
 export interface PageAddListingProps {}
 
@@ -23,6 +26,7 @@ const PageAddListing: FC<PageAddListingProps> = () => {
   const [beds, setBeds]:any = useState(undefined)
   const [baths, setBaths]:any = useState(undefined)
   const [desc, setDesc]:any = useState(undefined)
+  const [distance, setDistance]:any = useState(undefined)
   const [selected, setSelected]:any[] = useState([false, false])
   const [availableDate, setAvailableDate]:any = useState(null);
   const [focusedInput, setFocusedInput] = useState(false);
@@ -52,7 +56,8 @@ const PageAddListing: FC<PageAddListingProps> = () => {
       sqft: sqft,
       available: (selected[1] && availableDate !== null) ? availableDate.format('MMMM DD, YYYY') : true,
       description: desc,
-      map: map
+      map: map,
+      distance: distance
     }
 
     fetch(`${process.env.REACT_APP_API_SERVER}/property/uploadProperty`, {
@@ -73,14 +78,26 @@ const PageAddListing: FC<PageAddListingProps> = () => {
     return;
   }
 
+  const calculateDistToCampus = (location:any) => {
+    let rl1 = location.lat * toRadian
+    let rl2 = CLEMSON.lat * toRadian
+    let difflat = rl2 - rl1
+    let difflon = (CLEMSON.lng - location.lng) * toRadian
+
+    let d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(rl1)*Math.cos(rl2)*Math.sin(difflon/2)*Math.sin(difflon/2)));
+    console.log(d)
+    setDistance(d);
+  }
+
   const geocodeLocation = () => {
-    if(state.length === 2){
+    if(city.length >= 3){
       const params = encodeURIComponent(`${address}, ${city}, ${state}`)
       fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${params}&key=${process.env.REACT_APP_GCP_API_KEY}`).then((res) => {
         return res.json()
       }).then((data) => {
         setFullLocation(data.results[0].formatted_address)
         setMap(data.results[0].geometry.location)
+        calculateDistToCampus(data.results[0].geometry.location)
       }).catch((e) => {
         console.error(e)
       })

@@ -12,6 +12,9 @@ import FormItem from "./FormItem";
 import { SingleDatePicker } from "react-dates";
 import useWindowSize from "hooks/useWindowResize";
 import moment from "moment";
+const CLEMSON = {lat: 34.688679, lng: -82.834877}
+const R = 3958.8
+const toRadian = (Math.PI/180)
 
 const PageEditListing: any = () => {
   const params:any = useParams()
@@ -24,6 +27,7 @@ const PageEditListing: any = () => {
   const [beds, setBeds]:any = useState(undefined)
   const [baths, setBaths]:any = useState(undefined)
   const [desc, setDesc]:any = useState(undefined)
+  const [distance, setDistance]:any = useState(undefined)
   const [selected, setSelected]:any[] = useState([false, false])
   const [submit, setSubmit]:any = useState(false);
   const [availableDate, setAvailableDate]:any = useState(null);
@@ -77,6 +81,17 @@ const PageEditListing: any = () => {
     window.location.assign(`${window.location.origin}/listing-detail/${params.id}`)
   }
 
+  const calculateDistToCampus = (location:any) => {
+    let rl1 = location.lat * toRadian
+    let rl2 = CLEMSON.lat * toRadian
+    let difflat = rl2 - rl1
+    let difflon = (CLEMSON.lng - location.lng) * toRadian
+
+    let d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(rl1)*Math.cos(rl2)*Math.sin(difflon/2)*Math.sin(difflon/2)));
+    console.log(d)
+    setDistance(d);
+  }
+
   const geocodeLocation = () => {
     if(state.length === 2){
       const params = encodeURIComponent(`${address}, ${city}, ${state}`)
@@ -85,6 +100,7 @@ const PageEditListing: any = () => {
       }).then((data) => {
         setFullLocation(data.results[0].formatted_address)
         setMap(data.results[0].geometry.location)
+        calculateDistToCampus(data.results[0].geometry.location)
       }).catch((e) => {
         console.error(e)
       })
