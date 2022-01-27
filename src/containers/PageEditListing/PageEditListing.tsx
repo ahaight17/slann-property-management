@@ -58,7 +58,8 @@ const PageEditListing: any = () => {
       sqft: sqft,
       available: (selected[1] && availableDate !== null) ? availableDate.format('MMMM DD, YYYY') : true,
       description: desc,
-      map: map
+      map: map,
+      distance: distance
     }
 
     fetch(`${process.env.REACT_APP_API_SERVER}/property/editProperty/${params.id}`, {
