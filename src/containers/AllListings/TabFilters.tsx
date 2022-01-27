@@ -29,6 +29,10 @@ const TabFilters = (props:any) => {
           <option value={1}>Rent: High to Low</option>
           <option value={2}>Address: A to Z</option>
           <option value={3}>Address: Z to A</option>
+          <option value={4}>Dist. to Campus: Asc</option>
+          <option value={5}>Dist. to Campus: Desc</option>
+          <option value={6}>Availability: Asc</option>
+          <option value={7}>Availability: Desc</option>
         </Select>
       </div>
     );

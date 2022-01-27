@@ -6,6 +6,9 @@ import { Dialog, Transition } from "@headlessui/react";
 import { useAllProperties } from "net/properties";
 import TabFilters from "./TabFilters";
 import { ExclamationIcon } from "@heroicons/react/solid";
+import moment from "moment";
+import FormItem from "containers/PageAddListing/FormItem";
+import Input from "shared/Input/Input";
 
 
 
@@ -23,6 +26,7 @@ const AllListings: FC<AuthorPageProps> = ({ className = "" }) => {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [name, setName] = useState()
   const [id, setId] = useState()
+  const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(false)
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
@@ -42,6 +46,26 @@ const AllListings: FC<AuthorPageProps> = ({ className = "" }) => {
           break;
         case 3:
           sorted.sort((a:any, b:any) => parseInt(b.title) - parseInt(a.title))
+          break;
+        case 4:
+          sorted.sort((a:any, b:any) => a.distance - b.distance)
+          break;
+        case 5:
+          sorted.sort((a:any, b:any) => b.distance - a.distance)
+          break;
+        case 6:
+          sorted.sort((a:any, b:any) => {
+            if(moment(a.available).isSame(b.available)) return 0
+            else if(moment(a.available).isSameOrBefore(b.available)) return -1
+            else return 1
+          })
+          break;
+        case 7:
+          sorted.sort((a:any, b:any) => {
+            if(moment(a.available).isSame(b.available)) return 0
+            else if(moment(a.available).isSameOrBefore(b.available)) return 1
+            else return -1
+          })
           break;
         default:
           break;
@@ -111,18 +135,19 @@ const AllListings: FC<AuthorPageProps> = ({ className = "" }) => {
           <h1 className="text-2xl font-semibold">All Listings</h1>
         </div>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
+          <FormItem label="Property Search">
+            <Input type="text" onChange={(e:any) => setSearch(e.target.value)} value={search}/>
+          </FormItem>
         <TabFilters
           propertyAvailable={propertyAvailable}
           setPropertyAvailable={setPropertyAvailable}
           sort={sort}
           setSort={setSort}
         />
-        <div>
-            <div className="mt-8 grid grid-cols-1 gap-6 md:gap-7 sm:grid-cols-2">
-              { listings.filter((item:any) => (propertyAvailable ? item.available === true : true)).map((stay:any) => (
-                <StayCard key={stay._id} data={stay} setDeleteOpen={setDeleteOpen} setName={setName} setId={setId}/>
-              ))}
-            </div>
+        <div className="mt-8 grid grid-cols-1 gap-6 md:gap-7 sm:grid-cols-2">
+          { listings.filter((item:any) => (propertyAvailable ? (item.available === true && item.title.toLowerCase().includes(search.toLowerCase())) : item.title.toLowerCase().includes(search.toLowerCase()))).map((stay:any) => (
+            <StayCard key={stay._id} data={stay} setDeleteOpen={setDeleteOpen} setName={setName} setId={setId}/>
+          ))}
         </div>
       </div>
     );
